@@ -69,7 +69,7 @@ def test_parcellate_2d_timeseries_success() -> None:
     """Test that the 2D timeseries are parcellated correctly."""
     timeseries = [[1, 2, 1], [1, 1, 1], [2, 2, 2]]
     parcellation = [1, 1, 2]
-    expected = [[1.5, 1], [1, 1], [2, 2]]
+    expected = np.array([[1.5, 1], [1, 1], [2, 2]])
 
     actual = gradients._parcellate_timeseries(
         timeseries=timeseries,

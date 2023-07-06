@@ -2,6 +2,7 @@
 # pylint: disable=redefined-outer-name
 import argparse
 import tempfile
+from typing import Generator
 
 import h5py
 import nibabel as nib
@@ -21,7 +22,7 @@ class MockParser:
     """
 
     def __init__(
-        self, input_files: list[str], output_file: str, parcellation: str = None
+        self, input_files: list[str], output_file: str, parcellation: str | None = None
     ) -> None:
         self.input_file = input_files
         self.output_file = output_file
@@ -47,7 +48,7 @@ class MockParser:
 
 
 @pytest.fixture
-def nifti_data_file() -> str:
+def nifti_data_file() -> Generator[str, None, None]:
     """Return a mock NIfTI temporary data file."""
     data = np.random.rand(10, 10, 10, 10)
     with tempfile.NamedTemporaryFile(suffix=".nii") as file:
@@ -56,7 +57,7 @@ def nifti_data_file() -> str:
 
 
 @pytest.fixture
-def nifti_parcellation_file() -> str:
+def nifti_parcellation_file() -> Generator[str, None, None]:
     """Return a mock NIfTI temporary parcellation file."""
     parcellation = np.ones((10, 10, 10), dtype=np.int32)
     parcellation[5:, :, :] = 2
@@ -67,7 +68,7 @@ def nifti_parcellation_file() -> str:
 
 
 @pytest.fixture
-def surface_data_file() -> str:
+def surface_data_file() -> Generator[str, None, None]:
     """Return a mock surface data file."""
     data = np.random.rand(10, 20).astype(np.float32)
     with tempfile.NamedTemporaryFile(suffix=".func.gii") as file:
@@ -77,7 +78,7 @@ def surface_data_file() -> str:
 
 
 @pytest.fixture
-def surface_parcellation_file() -> str:
+def surface_parcellation_file() -> Generator[str, None, None]:
     """Return a mock surface parcellation file."""
     parcellation = np.ones((10,), dtype=np.int32)
     parcellation[4:8] = 2
@@ -105,7 +106,7 @@ def test_volume_input(
         )
 
         cli.main()
-        output = np.array(h5py.File(output.name, "r")["gradient_map"])
+        output = np.array(h5py.File(output.name, "r")["gradient_map"])  # type: ignore[assignment]
 
     assert output.shape == (3, 2)  # three parcels, two components
 
@@ -127,6 +128,6 @@ def test_surface_input(
         )
 
         cli.main()
-        output = np.array(h5py.File(output.name, "r")["gradient_map"])
+        output = np.array(h5py.File(output.name, "r")["gradient_map"])  # type: ignore[assignment]
 
     assert output.shape == (3, 2)  # three parcels, two components

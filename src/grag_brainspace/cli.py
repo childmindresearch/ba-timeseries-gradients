@@ -54,13 +54,14 @@ def _save_numpy_array(
         filename: The filename to save the array to.
 
     """
-    if filename.endswith(".h5"):
+    filepath = pathlib.Path(filename)
+    if filepath.suffix == ".h5":
         h5py.File(filename, "w").create_dataset(
             "gradient_map", data=output_gradients, compression="gzip"
         )
-    elif filename.endswith((".tsv")):
+    elif filepath.suffix == ".tsv":
         np.savetxt(filename, output_gradients, delimiter="\t")
-    elif filename.endswith((".csv")):
+    elif filepath.suffix == ".csv":
         np.savetxt(filename, output_gradients, delimiter=",")
     else:
         logger.warning("Output file extension not recognized. Saving as csv file.")
@@ -188,9 +189,7 @@ def _parse_input_list(input_list: str | pathlib.Path) -> list[str]:
     return input_files
 
 
-def _raise_invalid_input(
-    args: argparse.Namespace, files: abc.Collection[str | pathlib.Path]
-) -> None:
+def _raise_invalid_input(args: argparse.Namespace, files: list[str]) -> None:
     """
     Check if the input arguments are valid.
 
@@ -219,8 +218,8 @@ def _raise_invalid_input(
         )
 
     if not all(
-        (filename.endswith((".nii", ".nii.gz")) for filename in files)
-    ) and not all((filename.endswith(".gii") for filename in files)):
+        (str(filename).endswith((".nii", ".nii.gz")) for filename in files)
+    ) and not all((str(filename).endswith(".gii") for filename in files)):
         raise exceptions.InputError(
             "Input file(s) must be either be GIFTI or NIFTI files, not both."
         )

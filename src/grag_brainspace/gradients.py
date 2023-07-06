@@ -7,6 +7,7 @@ import nibabel as nib
 import numpy as np
 from brainspace import gradient
 from brainspace.utils import parcellation as brainspace_parcellation
+from nibabel import filebasedimages
 from numpy import typing as npt
 
 from grag_brainspace import exceptions, logs
@@ -132,7 +133,7 @@ def _parcellate_timeseries(
     return parcellated_timeseries
 
 
-def _get_nifti_gifti_data(image: nib.Nifti1Image | nib.GiftiImage) -> np.ndarray:
+def _get_nifti_gifti_data(image: filebasedimages.FileBasedImage) -> np.ndarray:
     """Get the data from a NIfTI or GIFTI image.
 
     Args:
