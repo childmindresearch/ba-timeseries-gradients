@@ -21,5 +21,9 @@ class InputError(BaseLoggingError):
     """Exception raised when an input value is invalid or incorrect."""
 
 
+class InternalError(BaseLoggingError):
+    """Exception raised when an internal error occurs. These should never happen."""
+
+
 class BrainSpaceError(BaseLoggingError):
     """Exception raised when a BrainSpace error occurs."""

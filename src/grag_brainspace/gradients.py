@@ -122,6 +122,7 @@ def _parcellate_timeseries(
         Parcellated timeseries into a time-by-parcel 2D array.
     """
     logger.debug("Parcellating timeseries...")
+
     if np.shape(timeseries)[1] != np.size(parcellation):
         raise exceptions.InputError(
             "Parcellation dimensions do not match timeseries dimensions."
