@@ -25,7 +25,7 @@ def compute_gradients(
     kernel: str = "cosine",
     n_components: int = 10,
     sparsity: float = 0.9,
-) -> np.ndarray:
+) -> tuple[np.ndarray, np.ndarray]:
     """
     Computes the gradients for a collection of files.
 
@@ -64,7 +64,8 @@ def compute_gradients(
         raise exceptions.BrainSpaceError(
             f"An error occurred in BrainSpace: {exc_info}"
         ) from exc_info
-    return gradient_map.gradients_
+
+    return gradient_map.gradients_, gradient_map.lambdas_
 
 
 def _get_connectivity_matrix(

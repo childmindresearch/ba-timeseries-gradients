@@ -106,9 +106,11 @@ def test_volume_input(
         )
 
         cli.main()
-        output = np.array(h5py.File(output.name, "r")["gradient_map"])  # type: ignore[assignment]
+        output_gradients = np.array(h5py.File(output.name, "r")["gradients"])  # type: ignore[assignment]
+        output_lambdas = np.array(h5py.File(output.name, "r")["lambdas"])  # type: ignore[assignment]
 
-    assert output.shape == (3, 2)  # three parcels, two components
+    assert output_gradients.shape == (3, 2)  # three parcels, two components
+    assert output_lambdas.shape == (2,)  # two components
 
 
 def test_surface_input(
@@ -128,6 +130,8 @@ def test_surface_input(
         )
 
         cli.main()
-        output = np.array(h5py.File(output.name, "r")["gradient_map"])  # type: ignore[assignment]
+        output_gradients = np.array(h5py.File(output.name, "r")["gradients"])  # type: ignore[assignment]
+        output_lambdas = np.array(h5py.File(output.name, "r")["lambdas"])  # type: ignore[assignment]
 
-    assert output.shape == (3, 2)  # three parcels, two components
+    assert output_gradients.shape == (3, 2)  # three parcels, two components
+    assert output_lambdas.shape == (2,)  # two components

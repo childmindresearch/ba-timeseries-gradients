@@ -14,9 +14,10 @@ def test_compute_gradients(mocker: pytest_mock.MockFixture) -> None:
         return_value=np.ones((3, 3)),
     )
 
-    actual = gradients.compute_gradients(files=[], sparsity=0)
+    actual_gradients, actual_lambdas = gradients.compute_gradients(files=[], sparsity=0)
 
-    assert np.allclose(actual, 0)
+    assert np.allclose(actual_gradients, 0)
+    assert np.allclose(actual_lambdas, 0)
 
 
 def test_compute_gradients_brainspace_error(mocker: pytest_mock.MockFixture) -> None:

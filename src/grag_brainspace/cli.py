@@ -29,7 +29,7 @@ def main():
     _raise_invalid_input(args, files)
 
     logger.info("Calculating gradient map...")
-    output_gradients = gradients.compute_gradients(
+    output_gradients, lambdas = gradients.compute_gradients(
         files,
         parcellation_file=args.parcellation,
         approach=args.dimensionality_reduction,
@@ -39,11 +39,11 @@ def main():
     )
 
     logger.info("Saving gradient map to %s...", args.output)
-    _save_numpy_array(output_gradients, filename=args.output)
+    _save_numpy_array(output_gradients, lambdas, filename=args.output)
 
 
 def _save_numpy_array(
-    output_gradients: np.ndarray, filename: str | pathlib.Path
+    output_gradients: np.ndarray, lambdas: np.ndarray, filename: str | pathlib.Path
 ) -> None:
     """
     Saves a numpy array to a file with the given filename.
@@ -54,17 +54,9 @@ def _save_numpy_array(
 
     """
     filepath = pathlib.Path(filename)
-    if filepath.suffix == ".h5":
-        h5py.File(filename, "w").create_dataset(
-            "gradient_map", data=output_gradients, compression="gzip"
-        )
-    elif filepath.suffix == ".tsv":
-        np.savetxt(filename, output_gradients, delimiter="\t")
-    elif filepath.suffix == ".csv":
-        np.savetxt(filename, output_gradients, delimiter=",")
-    else:
-        logger.warning("Output file extension not recognized. Saving as csv file.")
-        np.savetxt(filename, output_gradients, delimiter=",")
+    with h5py.File(filepath, "w") as f:
+        f.create_dataset("gradients", data=output_gradients)
+        f.create_dataset("lambdas", data=lambdas)
 
 
 def _get_parser() -> argparse.ArgumentParser:
@@ -103,7 +95,7 @@ def _get_parser() -> argparse.ArgumentParser:
         "-o",
         required=True,
         type=pathlib.Path,
-        help="Output file name. Must be HDF5, CSV, or TSV file.",
+        help="Output gradient filename. Must be HDF5 file.",
     )
     parser.add_argument(
         "--parcellation",
@@ -149,7 +141,7 @@ def _get_parser() -> argparse.ArgumentParser:
         "--force",
         "-f",
         required=False,
-        action="store_false",
+        action="store_true",
         help="Force overwrite of output file if it already exists.",
     )
     return parser

@@ -173,64 +173,14 @@ def test_save_numpy_array_h5():
     """Test that the _save_numpy_array function saves a numpy array to an h5 file
     with the correct name and content.
     """
-    expected = np.array([[1, 2, 3], [4, 5, 6]])
+    expected_1 = np.array([[1, 2, 3], [4, 5, 6]])
+    expected_2 = np.array([1, 2, 3])
 
     with tempfile.NamedTemporaryFile(suffix=".h5") as f:
-        cli._save_numpy_array(expected, f.name)
+        cli._save_numpy_array(expected_1, expected_2, f.name)
         with h5py.File(f.name, "r") as h5:
-            actual = np.array(h5["gradient_map"])
+            actual_1 = np.array(h5["gradients"])
+            actual_2 = np.array(h5["lambdas"])
 
-    assert np.allclose(actual, expected)
-
-
-@pytest.mark.skipif(
-    IS_WINDOWS,
-    reason="Windows does not support writing to and reading from the same temporary file.",
-)
-def test_save_numpy_array_tsv():
-    """Test that the _save_numpy_array function saves a numpy array to a tsv
-    file with the correct content.
-    """
-    expected = np.array([[1, 2, 3], [4, 5, 6]])
-
-    with tempfile.NamedTemporaryFile(suffix=".tsv") as f:
-        cli._save_numpy_array(expected, f.name)
-        actual = np.loadtxt(f.name, delimiter="\t")
-
-    assert np.allclose(actual, expected)
-
-
-@pytest.mark.skipif(
-    IS_WINDOWS,
-    reason="Windows does not support writing to and reading from the same temporary file.",
-)
-def test_save_numpy_array_csv():
-    """Test that the _save_numpy_array function saves a numpy array to a csv
-    file with the correct content.
-    """
-    expected = np.array([[1, 2, 3], [4, 5, 6]])
-
-    with tempfile.NamedTemporaryFile(suffix=".csv") as f:
-        cli._save_numpy_array(expected, f.name)
-        actual = np.loadtxt(f.name, delimiter=",")
-
-    assert np.allclose(actual, expected)
-
-
-@pytest.mark.skipif(
-    IS_WINDOWS,
-    reason="Windows does not support writing to and reading from the same temporary file.",
-)
-def test_save_numpy_array_unknown_filetype(mocker):
-    """Test that the _save_numpy_array function warns the user when an unknown
-    filetype is given and saves as csv.
-    """
-    spy_warning_logger = mocker.spy(cli.logger, "warning")
-    expected = np.array([[1, 2, 3], [4, 5, 6]])
-
-    with tempfile.NamedTemporaryFile(suffix=".unknown") as f:
-        cli._save_numpy_array(expected, f.name)
-        actual = np.loadtxt(f.name, delimiter=",")
-
-    assert np.allclose(actual, expected)
-    assert spy_warning_logger.call_count == 1
+    assert np.allclose(actual_1, expected_1)
+    assert np.allclose(actual_2, expected_2)
