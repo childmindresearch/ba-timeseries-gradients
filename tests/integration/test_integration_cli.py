@@ -1,6 +1,8 @@
 """ CLI Integration tests. """
 # pylint: disable=redefined-outer-name
 import argparse
+import dataclasses
+import pathlib
 import tempfile
 from typing import Generator
 
@@ -14,6 +16,7 @@ from nibabel import gifti
 from grag_brainspace import cli
 
 
+@dataclasses.dataclass
 class MockParser:
     """A mock parser class used for testing command line interface (CLI) functionality.
 
@@ -21,30 +24,32 @@ class MockParser:
     in order to test the CLI functionality of the `grag_brainspace` package.
     """
 
-    def __init__(
-        self, input_files: list[str], output_file: str, parcellation: str | None = None
-    ) -> None:
-        self.input_file = input_files
-        self.output_file = output_file
-        self.parcellation = parcellation
+    bids_dir: pathlib.Path = pathlib.Path("/path/to/bids")
+    output_dir: pathlib.Path = pathlib.Path("/path/to/output")
+    analysis_level: str = "group"
+    subject: list[str] | None = None
+    session: list[str] | None = None
+    suffix: str | None = None
+    task: list[str] | None = None
+    extension: str = ".nii.gz"
+    dimensionality_reduction: str = "dm"
+    parcellation: str | None = None
+    output_format = "hdf5"
+    kernel: str = "cosine"
+    sparsity: float = 0.1
+    n_components: int = 10
+    force: bool = False
+    verbose: int = 0
 
-    def parse_args(self) -> argparse.Namespace:
-        """Parses the mocked command line arguments and returns a Namespace object.
+    def parse_args(self, *args):
+        """Return self."""
+        return self
 
-        Returns:
-            A Namespace object containing the parsed command line arguments.
-        """
-        return argparse.Namespace(
-            input_file=self.input_file,
-            input_list=None,
-            output=self.output_file,
-            n_components=2,
-            force=True,
-            parcellation=self.parcellation,
-            sparsity=0.0,  # Low sparsity to ensure enough data remains with small test data
-            kernel="cosine",
-            dimensionality_reduction="dm",
-        )
+
+@pytest.fixture
+def mock_parser() -> MockParser:
+    """Return a mock parser object."""
+    return MockParser()
 
 
 @pytest.fixture
@@ -91,23 +96,29 @@ def surface_parcellation_file() -> Generator[str, None, None]:
 
 def test_volume_input(
     mocker: pytest_mock.MockerFixture,
+    mock_parser: MockParser,
     nifti_data_file: str,
     nifti_parcellation_file: str,
 ) -> None:
     """Test that the CLI works with a volume input."""
-    with tempfile.NamedTemporaryFile(suffix=".h5") as output:
+    with tempfile.TemporaryDirectory() as output_dir:
+        mock_parser.output_dir = pathlib.Path(output_dir)
+        mock_parser.parcellation = nifti_parcellation_file
         mocker.patch(
             "grag_brainspace.cli._get_parser",
-            return_value=MockParser(
-                input_files=[nifti_data_file],
-                output_file=output.name,
-                parcellation=nifti_parcellation_file,
-            ),
+            return_value=mock_parser,
+        )
+        mocker.patch(
+            "grag_brainspace.cli._get_bids_files",
+            return_value=[nifti_data_file],
         )
 
         cli.main()
-        output_gradients = np.array(h5py.File(output.name, "r")["gradients"])  # type: ignore[assignment]
-        output_lambdas = np.array(h5py.File(output.name, "r")["lambdas"])  # type: ignore[assignment]
+
+        output = pathlib.Path(output_dir) / "gradients.h5"
+
+        output_gradients = np.array(h5py.File(output, "r")["gradients"])  # type: ignore[assignment]
+        output_lambdas = np.array(h5py.File(output, "r")["lambdas"])  # type: ignore[assignment]
 
     assert output_gradients.shape == (3, 2)  # three parcels, two components
     assert output_lambdas.shape == (2,)  # two components
@@ -115,23 +126,28 @@ def test_volume_input(
 
 def test_surface_input(
     mocker: pytest_mock.MockerFixture,
+    mock_parser: MockParser,
     surface_data_file: str,
     surface_parcellation_file: str,
 ) -> None:
     """Test that the CLI works with a surface input."""
-    with tempfile.NamedTemporaryFile(suffix=".h5") as output:
+    with tempfile.TemporaryDirectory() as output_dir:
+        mock_parser.output_dir = pathlib.Path(output_dir)
+        mock_parser.parcellation = surface_parcellation_file
         mocker.patch(
             "grag_brainspace.cli._get_parser",
-            return_value=MockParser(
-                input_files=[surface_data_file],
-                output_file=output.name,
-                parcellation=surface_parcellation_file,
-            ),
+            return_value=mock_parser,
+        )
+        mocker.patch(
+            "grag_brainspace.cli._get_bids_files",
+            return_value=[surface_data_file],
         )
 
         cli.main()
-        output_gradients = np.array(h5py.File(output.name, "r")["gradients"])  # type: ignore[assignment]
-        output_lambdas = np.array(h5py.File(output.name, "r")["lambdas"])  # type: ignore[assignment]
+        output = pathlib.Path(output_dir) / "gradients.h5"
+
+        output_gradients = np.array(h5py.File(output, "r")["gradients"])  # type: ignore[assignment]
+        output_lambdas = np.array(h5py.File(output, "r")["lambdas"])  # type: ignore[assignment]
 
     assert output_gradients.shape == (3, 2)  # three parcels, two components
     assert output_lambdas.shape == (2,)  # two components

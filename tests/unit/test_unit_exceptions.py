@@ -11,6 +11,7 @@ from grag_brainspace import exceptions
         exceptions.BaseLoggingError,
         exceptions.InputError,
         exceptions.BrainSpaceError,
+        exceptions.InternalError,
     ],
 )
 def test_logging_error(

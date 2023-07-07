@@ -12,6 +12,7 @@ python = "^3.11"
 brainspace = "^0.1.10"
 numpy = "^1.25.0"
 h5py = "^3.9.0"
+pybids = "^0.16.1"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.3.2"
