@@ -1,13 +1,13 @@
-FROM python:3.11-alpine
+FROM python:3.11-slim-buster
 
 WORKDIR /app
 
-COPY ./pyproject.toml ./poetry.lock ./
+COPY src ./pyproject.toml ./poetry.lock ./
 
-RUN pip install --no-chace-dir --upgrade pip && \
+RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir poetry && \
     poetry config virtualenvs.create false && \
-    poetry install --no-dev --no-interaction --no-ansi
+    poetry install --only main --no-interaction --no-ansi
 
-CMD ["python", "main.py"]
-
+ENTRYPOINT [ "poetry run grag_brainspace" ]
+CMD [ "poetry run grag_brainspace --help" ]

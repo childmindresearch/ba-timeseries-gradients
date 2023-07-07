@@ -3,7 +3,6 @@
 import argparse
 import logging
 import pathlib
-from collections import abc
 
 import h5py
 import numpy as np
