@@ -4,10 +4,15 @@ WORKDIR /app
 
 COPY src ./pyproject.toml ./poetry.lock ./
 
+ENV PYTHONPATH "${PYTHONPATH}:/app"
+
+# Workaround for the python environment installation to not install vtk.
+# VTK builds have issues on Apple Silicon.
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir poetry && \
-    poetry config virtualenvs.create false && \
-    poetry install --only main --no-interaction --no-ansi
+    poetry export --only main --without-hashes --without-urls | grep -vE "^vtk" > requirements.txt && \
+    pip install --no-cache-dir --no-deps -r requirements.txt && \
+    rm requirements.txt poetry.lock pyproject.toml
 
-ENTRYPOINT [ "poetry run grag_brainspace" ]
-CMD [ "poetry run grag_brainspace --help" ]
+ENTRYPOINT [ "python", "/app/grag_brainspace/cli.py" ]
+CMD [ "python", "/app/grag_brainspace/cli.py", "-h" ]

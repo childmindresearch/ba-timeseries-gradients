@@ -1,3 +1,5 @@
+# docker compose ignored as its used locally to deal with some odd docker authentication issues.
+docker-compose.yaml
 volume
 
 # Byte-compiled / optimized / DLL files
