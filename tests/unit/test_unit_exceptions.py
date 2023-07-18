@@ -1,8 +1,8 @@
-""" Unit tests for the grag_brainspace.exceptions module. """
+""" Unit tests for the ba_timeseries_gradients.exceptions module. """
 import pytest
 import pytest_mock
 
-from grag_brainspace import exceptions
+from ba_timeseries_gradients import exceptions
 
 
 @pytest.mark.parametrize(

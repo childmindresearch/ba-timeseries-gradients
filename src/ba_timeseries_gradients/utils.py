@@ -6,7 +6,7 @@ import pathlib
 import h5py
 import numpy as np
 
-from grag_brainspace import exceptions
+from ba_timeseries_gradients import exceptions
 
 
 def save(

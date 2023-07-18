@@ -4,13 +4,13 @@ import numpy as np
 import pytest
 import pytest_mock
 
-from grag_brainspace import exceptions, gradients
+from ba_timeseries_gradients import exceptions, gradients
 
 
 def test_compute_gradients(mocker: pytest_mock.MockFixture) -> None:
     """Test that the compute_gradients function calls the correct functions."""
     mocker.patch(
-        "grag_brainspace.gradients._get_connectivity_matrix",
+        "ba_timeseries_gradients.gradients._get_connectivity_matrix",
         return_value=np.ones((3, 3)),
     )
 
@@ -24,7 +24,7 @@ def test_compute_gradients_brainspace_error(mocker: pytest_mock.MockFixture) -> 
     """Test that the compute_gradients function raises an error when
     BrainSpace raises an error."""
     mocker.patch(
-        "grag_brainspace.gradients._get_connectivity_matrix",
+        "ba_timeseries_gradients.gradients._get_connectivity_matrix",
         return_value=np.ones((3, 3)),
     )
     mocker.patch(
@@ -41,7 +41,8 @@ def test_connevtivity_matrix_from_2d_success(mocker: pytest_mock.MockerFixture) 
     timeseries."""
     mocker.patch("nibabel.load")
     mocker.patch(
-        "grag_brainspace.gradients._get_nifti_gifti_data", return_value=np.eye(3)
+        "ba_timeseries_gradients.gradients._get_nifti_gifti_data",
+        return_value=np.eye(3),
     )
     expected = np.eye(3)
     expected[~np.eye(3, dtype=bool)] = -0.5
@@ -57,7 +58,7 @@ def test_connevtivity_matrix_from_4d_success(mocker: pytest_mock.MockerFixture) 
     data_4d = np.concatenate((np.ones((2, 2, 2, 2)), np.zeros((2, 2, 2, 1))), axis=3)
     mocker.patch("nibabel.load")
     mocker.patch(
-        "grag_brainspace.gradients._get_nifti_gifti_data", return_value=data_4d
+        "ba_timeseries_gradients.gradients._get_nifti_gifti_data", return_value=data_4d
     )
     expected = np.ones((8, 8))
 

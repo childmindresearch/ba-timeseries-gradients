@@ -1,12 +1,12 @@
 # /usr/bin/env python
-""" Command line interface for grag-brainspace. """
+""" Command line interface for ba_timeseries_gradients. """
 import argparse
 import logging
 import pathlib
 
-import bids
+import bids2table
 
-from grag_brainspace import exceptions, gradients, logs, utils
+from ba_timeseries_gradients import exceptions, gradients, logs, utils
 
 LOGGER_NAME = logs.LOGGER_NAME
 
@@ -15,7 +15,7 @@ logger = logging.getLogger(LOGGER_NAME)
 
 def main():
     """
-    The main function that runs the grag-brainspace command line interface.
+    The main function that runs the ba_timeseries_gradients command line interface.
     """
     logger.debug("Parsing command line arguments...")
     parser = _get_parser()
@@ -45,17 +45,17 @@ def main():
 
 def _get_parser() -> argparse.ArgumentParser:
     """
-    Returns an ArgumentParser object with the command line arguments for the grag-brainspace CLI.
+    Returns an ArgumentParser object with the command line arguments for the ba_timeseries_gradients CLI.
 
     Returns:
         argparse.ArgumentParser: An ArgumentParser object with the command line arguments.
     """
     parser = argparse.ArgumentParser(
-        prog="grag-brainspace",
+        prog="ba_timeseries_gradients",
         description="""Computes gradients for a BIDS dataset. If the target
         files are volumetric, they must be in NIFTI format, and a parcellation
         file must be provided.""",
-        epilog="""Issues can be reported at: https://github.com/cmi-dair/grag-brainspace.""",
+        epilog="""Issues can be reported at: https://github.com/cmi-dair/ba_timeseries_gradients.""",
     )
 
     mandatory_group = parser.add_argument_group("Mandatory arguments")
@@ -84,6 +84,7 @@ def _get_parser() -> argparse.ArgumentParser:
         default=None,
         type=str,
         action="append",
+        dest="sub",
         help="The subject to include for finding BIDS files. Defaults to all subjects.",
     )
     bids_group.add_argument(
@@ -92,6 +93,7 @@ def _get_parser() -> argparse.ArgumentParser:
         default=None,
         type=int,
         action="append",
+        dest="ses",
         help="The session to include for finding BIDS files. Defaults to all sessions.",
     )
     bids_group.add_argument(
@@ -122,7 +124,14 @@ def _get_parser() -> argparse.ArgumentParser:
         required=False,
         default=".nii.gz",
         type=str,
+        dest="ext",
         help="Extension to use for finding BIDS files. Defaults to '.nii.gz'.",
+    )
+    bids_group.add_argument(
+        "--datatype",
+        required=False,
+        default=None,
+        type=str,
     )
     brainspace_group.add_argument(
         "--parcellation",
@@ -223,8 +232,6 @@ def _get_bids_files(args: argparse.Namespace) -> list[str]:
     Returns:
         list[str]: The list of input files.
     """
-
-    bids_dir = bids.BIDSLayout(args.bids_dir)
     bids_keys = {"subject", "session", "suffix", "run", "task", "extension"}
     search_args = {
         key: value
@@ -232,10 +239,14 @@ def _get_bids_files(args: argparse.Namespace) -> list[str]:
         if value is not None and key in bids_keys
     }
 
-    files = bids_dir.get(
-        return_type="filename",
-        **search_args,
-    )
+    bids_table = bids2table.bids2table(args.bids_dir)
+    for key, value in search_args.items():
+        if isinstance(value, list):
+            bids_table = bids_table[bids_table[key].isin(value)]
+        else:
+            bids_table = bids_table[bids_table[key] == value]
+
+    files = bids_table["file_path"].tolist()
 
     logger.info("Found %d files in BIDS directory.", len(files))
     logger.debug("Files: %s", files)

@@ -1,10 +1,10 @@
-""" Logging module for grag-brainspace. 
+""" Logging module for ba_timeseries_gradients.
 
-This module provides a logger for the grag-brainspace package.
+This module provides a logger for the ba_timeseries_gradients package.
 The logger is imported into other modules using the following snippet:
 ```python
 import logging
-from grag_brainspace import logs
+from ba_timeseries_gradients import logs
 
 LOGGER_NAME = logs.LOGGER_NAME
 

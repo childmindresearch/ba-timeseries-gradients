@@ -9,7 +9,7 @@ import h5py
 import numpy as np
 import pytest
 
-from grag_brainspace import exceptions, utils
+from ba_timeseries_gradients import exceptions, utils
 
 IS_WINDOWS = os.name == "nt"
 

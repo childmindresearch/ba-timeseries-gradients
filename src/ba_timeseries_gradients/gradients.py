@@ -10,7 +10,7 @@ from brainspace.utils import parcellation as brainspace_parcellation
 from nibabel import filebasedimages
 from numpy import typing as npt
 
-from grag_brainspace import exceptions, logs
+from ba_timeseries_gradients import exceptions, logs
 
 LOGGER_NAME = logs.LOGGER_NAME
 

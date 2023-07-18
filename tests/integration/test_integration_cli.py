@@ -1,6 +1,5 @@
 """ CLI Integration tests. """
 # pylint: disable=redefined-outer-name
-import argparse
 import dataclasses
 import pathlib
 import tempfile
@@ -13,7 +12,7 @@ import pytest
 import pytest_mock
 from nibabel import gifti
 
-from grag_brainspace import cli
+from ba_timeseries_gradients import cli
 
 
 @dataclasses.dataclass
@@ -21,7 +20,7 @@ class MockParser:
     """A mock parser class used for testing command line interface (CLI) functionality.
 
     This class is used to simulate the behavior of the `argparse.ArgumentParser` class
-    in order to test the CLI functionality of the `grag_brainspace` package.
+    in order to test the CLI functionality of the `ba_timeseries_gradients` package.
     """
 
     bids_dir: pathlib.Path = pathlib.Path("/path/to/bids")
@@ -105,11 +104,11 @@ def test_volume_input(
         mock_parser.output_dir = pathlib.Path(output_dir)
         mock_parser.parcellation = nifti_parcellation_file
         mocker.patch(
-            "grag_brainspace.cli._get_parser",
+            "ba_timeseries_gradients.cli._get_parser",
             return_value=mock_parser,
         )
         mocker.patch(
-            "grag_brainspace.cli._get_bids_files",
+            "ba_timeseries_gradients.cli._get_bids_files",
             return_value=[nifti_data_file],
         )
 
@@ -135,11 +134,11 @@ def test_surface_input(
         mock_parser.output_dir = pathlib.Path(output_dir)
         mock_parser.parcellation = surface_parcellation_file
         mocker.patch(
-            "grag_brainspace.cli._get_parser",
+            "ba_timeseries_gradients.cli._get_parser",
             return_value=mock_parser,
         )
         mocker.patch(
-            "grag_brainspace.cli._get_bids_files",
+            "ba_timeseries_gradients.cli._get_bids_files",
             return_value=[surface_data_file],
         )
 

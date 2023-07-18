@@ -9,7 +9,7 @@ from unittest import mock
 
 import pytest
 
-from grag_brainspace import cli, exceptions
+from ba_timeseries_gradients import cli, exceptions
 
 
 @pytest.fixture

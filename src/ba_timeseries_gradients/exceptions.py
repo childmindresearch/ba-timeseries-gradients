@@ -1,7 +1,7 @@
-""" Custom exceptions for the grag_brainspace package. """
+""" Custom exceptions for the ba_timeseries_gradients package. """
 import logging
 
-from grag_brainspace import logs
+from ba_timeseries_gradients import logs
 
 LOGGER_NAME = logs.LOGGER_NAME
 
