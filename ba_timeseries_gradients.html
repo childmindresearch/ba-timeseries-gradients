@@ -65,22 +65,33 @@ ba_timeseries_gradients    </h1>
 
 <h2 id="installation">Installation</h2>
 
-<p>A PyPi installation will follow soon. Until then, the recommended approaches for installing ba-timeseries-gradients is through Docker. To build it, download the repository and run the following command from the repository root:</p>
+<p>The recommended approaches for installing ba-timeseries-gradients is through Docker or PyPi. To build it as a Docker image, download the repository and run the following command from the repository root:</p>
 
-<pre><code>docker build -t ba-timeseries-gradients .
+<div class="pdoc-code codehilite">
+<pre><span></span><code>docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>ba_timeseries_gradients<span class="w"> </span>.
 </code></pre>
+</div>
+
+<p>To install through PyPi, run the following command:</p>
+
+<div class="pdoc-code codehilite">
+<pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>ba_timeseries_gradients
+</code></pre>
+</div>
 
 <h2 id="usage">Usage</h2>
 
-<p>The basic usage of the ba-timeseries-gradients CLI is as follows:</p>
+<p>The basic usage of the ba_timeseries_gradients CLI is as follows, depending on whether you've installed through PyPi or Docker:</p>
 
-<pre><code>docker run ba-timeseries-gradients [OPTIONS] BIDS_DIR OUTPUT_DIR ANALYSIS_LEVEL
+<div class="pdoc-code codehilite">
+<pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>--volume<span class="w"> </span>LOCAL_BIDS_DIR:BIDS_DIR<span class="w"> </span>--volume<span class="w"> </span>LOCAL_OUTPUT_DIR:OUTPUT_DIR<span class="w"> </span>ba_timeseries_gradients<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span>BIDS_DIR<span class="w"> </span>OUTPUT_DIR<span class="w"> </span>ANALYSIS_LEVEL
+ba_timeseries_gradients<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span>BIDS_DIR<span class="w"> </span>OUTPUT_DIR<span class="w"> </span>ANALYSIS_LEVEL
 </code></pre>
+</div>
 
-<p>For details on all the options, simply run:</p>
+<p>The <code>BIDS_DIR</code> is the path to the BIDS directory containing the dataset to be analyzed. The <code>OUTPUT_DIR</code> is the path to the directory where the output will be saved. The <code>ANALYSIS_LEVEL</code> is the level of analysis to be performed, which can currently only be <code>group</code>.</p>
 
-<pre><code>docker run ba-timeseries-gradients -h
-</code></pre>
+<p>For a complete list of options see <code>ba_timeseries_gradients -h</code>. It is highly recommended to include options to filter the dataset for specific files. See the BIDS arguments section in the help for more details.</p>
 </div>
 
                         <input id="mod-ba_timeseries_gradients-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
