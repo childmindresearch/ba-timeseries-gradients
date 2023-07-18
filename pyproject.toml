@@ -28,6 +28,9 @@ pytest-mock = "^3.11.1"
 [tool.poetry.group.notebook.dependencies]
 ipykernel = "^6.24.0"
 
+[tool.poetry.group.doc.dependencies]
+pdoc = "^14.0.0"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
@@ -42,3 +45,6 @@ ignore_missing_imports = true
 
 [tool.poetry.scripts]
 ba_timeseries_gradients = "ba_timeseries_gradients.cli:main"
+
+[tool.poetry.extras]
+docs = ["pdoc"]
