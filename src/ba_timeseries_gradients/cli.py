@@ -56,6 +56,7 @@ def _get_parser() -> argparse.ArgumentParser:
         files are volumetric, they must be in NIFTI format, and a parcellation
         file must be provided.""",
         epilog="""Issues can be reported at: https://github.com/cmi-dair/ba_timeseries_gradients.""",
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
 
     mandatory_group = parser.add_argument_group("Mandatory arguments")
@@ -85,7 +86,7 @@ def _get_parser() -> argparse.ArgumentParser:
         type=str,
         action="append",
         dest="sub",
-        help="The subject to include for finding BIDS files. Defaults to all subjects.",
+        help="The subject to include for finding BIDS files.",
     )
     bids_group.add_argument(
         "--session",
@@ -94,14 +95,14 @@ def _get_parser() -> argparse.ArgumentParser:
         type=int,
         action="append",
         dest="ses",
-        help="The session to include for finding BIDS files. Defaults to all sessions.",
+        help="The session to include for finding BIDS files.",
     )
     bids_group.add_argument(
         "--suffix",
         required=False,
         default="bold",
         type=str,
-        help="Suffix to use for finding BIDS files. Defaults to 'bold'.",
+        help="Suffix to use for finding BIDS files.",
     )
     bids_group.add_argument(
         "--run",
@@ -109,7 +110,7 @@ def _get_parser() -> argparse.ArgumentParser:
         default=None,
         type=int,
         action="append",
-        help="The runs to include, may be supplied multiple times. Defaults to all runs.",
+        help="The runs to include, may be supplied multiple times.",
     )
     bids_group.add_argument(
         "--task",
@@ -117,7 +118,7 @@ def _get_parser() -> argparse.ArgumentParser:
         default=None,
         type=str,
         action="append",
-        help="The tasks to include, may be supplied multiple times. Defaults to all tasks.",
+        help="The tasks to include, may be supplied multiple times.",
     )
     bids_group.add_argument(
         "--extension",
@@ -125,7 +126,7 @@ def _get_parser() -> argparse.ArgumentParser:
         default=".nii.gz",
         type=str,
         dest="ext",
-        help="Extension to use for finding BIDS files. Defaults to '.nii.gz'.",
+        help="Extension to use for finding BIDS files.",
     )
     bids_group.add_argument(
         "--datatype",
@@ -179,14 +180,14 @@ def _get_parser() -> argparse.ArgumentParser:
         required=False,
         default=logging.INFO,
         type=int,
-        help="Verbosity level. Must be one of: 10 (DEBUG), 20 (INFO), 30 (WARNING), 40 (ERROR), 50 (CRITICAL). Defaults to 10.",
+        help="Verbosity level. Must be one of: 10 (DEBUG), 20 (INFO), 30 (WARNING), 40 (ERROR), 50 (CRITICAL).",
     )
     other_group.add_argument(
         "--output_format",
         required=False,
         default="hdf5",
         type=str,
-        help="Output format. Must be one of: 'hdf5', or 'json'. Defaults to 'hdf5'.",
+        help="Output format. Must be one of: 'hdf5', or 'json'.",
     )
     return parser
 
