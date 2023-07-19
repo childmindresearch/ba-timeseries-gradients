@@ -1,4 +1,4 @@
-""" Utility functions for the GRAG BrainSpace package. """
+""" Utility functions for the BrainSpace runner. """
 import argparse
 import json
 import pathlib
