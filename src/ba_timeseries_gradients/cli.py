@@ -4,7 +4,7 @@ import argparse
 import logging
 import pathlib
 
-import bids2table
+import bids
 
 from ba_timeseries_gradients import exceptions, gradients, logs, utils
 
@@ -49,6 +49,10 @@ def _get_parser() -> argparse.ArgumentParser:
 
     Returns:
         argparse.ArgumentParser: An ArgumentParser object with the command line arguments.
+
+    Notes:
+        Arguments in the bids_group must have a `dest` value equivalent to `bids_<argument>`, where
+        <argument> is the name of the argument in the BIDS specification.
     """
     parser = argparse.ArgumentParser(
         prog="ba_timeseries_gradients",
@@ -78,6 +82,7 @@ def _get_parser() -> argparse.ArgumentParser:
         "analysis_level",
         type=str,
         help="Level of the analysis that will be performed.",
+        choices=["group"],
     )
     bids_group.add_argument(
         "--subject",
@@ -85,8 +90,8 @@ def _get_parser() -> argparse.ArgumentParser:
         default=None,
         type=str,
         action="append",
-        dest="sub",
-        help="The subject to include for finding BIDS files.",
+        dest="bids_subject",
+        help="The subject regex to use for searching BIDS files.",
     )
     bids_group.add_argument(
         "--session",
@@ -94,7 +99,7 @@ def _get_parser() -> argparse.ArgumentParser:
         default=None,
         type=int,
         action="append",
-        dest="ses",
+        dest="bids_session",
         help="The session to include for finding BIDS files.",
     )
     bids_group.add_argument(
@@ -102,6 +107,7 @@ def _get_parser() -> argparse.ArgumentParser:
         required=False,
         default="bold",
         type=str,
+        dest="bids_suffix",
         help="Suffix to use for finding BIDS files.",
     )
     bids_group.add_argument(
@@ -110,6 +116,7 @@ def _get_parser() -> argparse.ArgumentParser:
         default=None,
         type=int,
         action="append",
+        dest="bids_run",
         help="The runs to include, may be supplied multiple times.",
     )
     bids_group.add_argument(
@@ -118,14 +125,23 @@ def _get_parser() -> argparse.ArgumentParser:
         default=None,
         type=str,
         action="append",
+        dest="bids_task",
         help="The tasks to include, may be supplied multiple times.",
+    )
+    bids_group.add_argument(
+        "--space",
+        required=False,
+        default=None,
+        type=str,
+        dest="bids_space",
+        help="The space to use for finding BIDS files.",
     )
     bids_group.add_argument(
         "--extension",
         required=False,
         default=".nii.gz",
         type=str,
-        dest="ext",
+        dest="bids_extension",
         help="Extension to use for finding BIDS files.",
     )
     bids_group.add_argument(
@@ -133,6 +149,7 @@ def _get_parser() -> argparse.ArgumentParser:
         required=False,
         default=None,
         type=str,
+        dest="bids_datatype",
     )
     brainspace_group.add_argument(
         "--parcellation",
@@ -187,8 +204,10 @@ def _get_parser() -> argparse.ArgumentParser:
         required=False,
         default="hdf5",
         type=str,
-        help="Output format. Must be one of: 'hdf5', or 'json'.",
+        help="Output file format",
+        choices=["hdf5", "json"],
     )
+
     return parser
 
 
@@ -233,24 +252,18 @@ def _get_bids_files(args: argparse.Namespace) -> list[str]:
     Returns:
         list[str]: The list of input files.
     """
-    bids_keys = {"subject", "session", "suffix", "run", "task", "extension"}
     search_args = {
-        key: value
-        for key, value in vars(args).items()
-        if value is not None and key in bids_keys
+        key.replace("bids_", ""): value
+        for key, value in args.__dict__.items()
+        if key.startswith("bids_") and key != "bids_dir" and value
     }
 
-    bids_table = bids2table.bids2table(args.bids_dir)
-    for key, value in search_args.items():
-        if isinstance(value, list):
-            bids_table = bids_table[bids_table[key].isin(value)]
-        else:
-            bids_table = bids_table[bids_table[key] == value]
+    layout = bids.BIDSLayout(args.bids_dir, validate=False)
+    files = layout.get(return_type="filename", **search_args)
 
-    files = bids_table["file_path"].tolist()
+    logger.info("Found %d input files.", len(files))
+    logger.debug("Input files: %s", files)
 
-    logger.info("Found %d files in BIDS directory.", len(files))
-    logger.debug("Files: %s", files)
     return files
 
 
