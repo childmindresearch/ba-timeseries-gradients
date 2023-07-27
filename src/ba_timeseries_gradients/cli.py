@@ -97,7 +97,7 @@ def _get_parser() -> argparse.ArgumentParser:
         "--session",
         required=False,
         default=None,
-        type=int,
+        type=str,
         action="append",
         dest="bids_session",
         help="The session to include for finding BIDS files.",
