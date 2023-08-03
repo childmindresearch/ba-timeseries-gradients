@@ -61,37 +61,59 @@ ba_timeseries_gradients    </h1>
 <a href="https://github.com/psf/black"><img src="https://img.shields.io/badge/code%20style-black-000000.svg" alt="Code style: black" /></a>
 <a href="LICENSE"><img src="https://img.shields.io/badge/license-L--GPL-blue.svg" alt="L-GPL License" /></a></p>
 
-<p>This is a command line interface (CLI) running BrainSpace on BIDS-compliant datasets. Gradients are computed for volumetric files in NIFTI format, or surface files in GIFTI format. For more details on BrainSpace, see the <a href="https://brainspace.readthedocs.io/en/latest/">BrainSpace documentation</a>.</p>
+<p>This is a command line interface (CLI) for running BrainSpace on BIDS-compliant datasets. Gradients are computed for volumetric files in NIFTI format, or surface files in GIFTI format. For more details on BrainSpace, see the <a href="https://brainspace.readthedocs.io/en/latest/">BrainSpace documentation</a>.</p>
 
 <h2 id="installation">Installation</h2>
 
-<p>The recommended approaches for installing ba-timeseries-gradients is through Docker or PyPi. To build it as a Docker image, download the repository and run the following command from the repository root:</p>
+<p>For local installation the recommended approach is through Poetry. To install through Poetry, run the following commands:</p>
 
 <div class="pdoc-code codehilite">
-<pre><span></span><code>docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>ba_timeseries_gradients<span class="w"> </span>.
-</code></pre>
-</div>
-
-<p>To install through PyPi, run the following command:</p>
-
-<div class="pdoc-code codehilite">
-<pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>ba_timeseries_gradients
+<pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>poetry
+poetry<span class="w"> </span>install
 </code></pre>
 </div>
 
 <h2 id="usage">Usage</h2>
 
-<p>The basic usage of the ba_timeseries_gradients CLI is as follows, depending on whether you've installed through PyPi or Docker:</p>
+<p>The basic usage of the ba_timeseries_gradients CLI is as follows for Poetry-based installations:</p>
 
 <div class="pdoc-code codehilite">
-<pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>--volume<span class="w"> </span>LOCAL_BIDS_DIR:BIDS_DIR<span class="w"> </span>--volume<span class="w"> </span>LOCAL_OUTPUT_DIR:OUTPUT_DIR<span class="w"> </span>ba_timeseries_gradients<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span>BIDS_DIR<span class="w"> </span>OUTPUT_DIR<span class="w"> </span>ANALYSIS_LEVEL
-ba_timeseries_gradients<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span>BIDS_DIR<span class="w"> </span>OUTPUT_DIR<span class="w"> </span>ANALYSIS_LEVEL
+<pre><span></span><code>ba_timeseries_gradients<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span>BIDS_DIR<span class="w"> </span>OUTPUT_DIR<span class="w"> </span>ANALYSIS_LEVEL
 </code></pre>
 </div>
 
 <p>The <code>BIDS_DIR</code> is the path to the BIDS directory containing the dataset to be analyzed. The <code>OUTPUT_DIR</code> is the path to the directory where the output will be saved. The <code>ANALYSIS_LEVEL</code> is the level of analysis to be performed, which can currently only be <code>group</code>.</p>
 
-<p>For a complete list of options see <code>ba_timeseries_gradients -h</code>. It is highly recommended to include options to filter the dataset for specific files. See the BIDS arguments section in the help for more details.</p>
+<p>For a full list of options, see:</p>
+
+<div class="pdoc-code codehilite">
+<pre><span></span><code>ba_timeseries_gradients<span class="w"> </span>--help
+</code></pre>
+</div>
+
+<p>It is highly recommended to include options to filter the dataset for specific files. See the BIDS arguments section in the help for more details.</p>
+
+<p>You can also run the CLI through Docker. To do so, run the following command:</p>
+
+<div class="pdoc-code codehilite">
+<pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--volume<span class="w"> </span>LOCAL_BIDS_DIR:BIDS_DIR<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--volume<span class="w"> </span>LOCAL_OUTPUT_DIR:OUTPUT_DIR<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>ghcr.io/cmi-dair/ba-timeseries-gradients:main<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span>BIDS_DIR<span class="w"> </span>OUTPUT_DIR<span class="w"> </span>ANALYSIS_LEVEL
+</code></pre>
+</div>
+
+<p>Similarly, the CLI can also be run in Singularity as follows:</p>
+
+<div class="pdoc-code codehilite">
+<pre><span></span><code>singularity<span class="w"> </span>run<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--bind<span class="w"> </span>LOCAL_BIDS_DIR:BIDS_DIR<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--bind<span class="w"> </span>LOCAL_OUTPUT_DIR:OUTPUT_DIR<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>docker://ghcr.io/cmi-dair/ba-timeseries-gradients:main<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span><span class="o">[</span>OPTIONS<span class="o">]</span><span class="w"> </span>BIDS_DIR<span class="w"> </span>OUTPUT_DIR<span class="w"> </span>ANALYSIS_LEVEL
+</code></pre>
+</div>
 </div>
 
                         <input id="mod-ba_timeseries_gradients-view-source" class="view-source-toggle-state" type="checkbox" aria-hidden="true" tabindex="-1">
