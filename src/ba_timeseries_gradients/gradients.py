@@ -26,8 +26,7 @@ def compute_gradients(
     n_components: int = 10,
     sparsity: float = 0.9,
 ) -> tuple[np.ndarray, np.ndarray]:
-    """
-    Computes the gradients for a collection of files.
+    """Computes the gradients for a collection of files.
 
     Args:
         files: A collection of file paths containing timeseries data.
@@ -39,7 +38,8 @@ def compute_gradients(
         sparsity: The sparsity level to use for the gradient computation.
 
     Returns:
-        The computed gradients as a numpy array.
+        numpy.ndarray: The computed gradients.
+        numpy.ndarray: The computed lambdas.
 
     Notes:
         The gradient computation is performed using the BrainSpace package.
@@ -77,6 +77,9 @@ def _get_connectivity_matrix(
     Returns:
         A connectivity matrix as a numpy array.
     """
+    if not files:
+        raise ValueError("No files provided.")
+
     if parcellation_file:
         logger.debug("Loading parcellation data...")
         parcellation = nib.load(parcellation_file)
