@@ -9,13 +9,16 @@ from ba_timeseries_gradients import exceptions
 
 
 def save(
-    output_gradients: np.ndarray, lambdas: np.ndarray, filename: str | pathlib.Path
+    output_gradients: np.ndarray,
+    lambdas: np.ndarray,
+    filename: str | pathlib.Path,
 ) -> None:
     """
     Saves a numpy array to a file with the given filename.
 
     Args:
         output_gradients: The numpy array to save.
+        lambdas: The lambdas to save.
         lambdas: The lambdas to save.
         filename: The filename to save the array to.
 
@@ -40,6 +43,9 @@ def save_hdf5(
         filename: The filename to save the array to.
 
     """
+    with h5py.File(filename, "w") as h5_file:
+        h5_file.create_dataset("gradients", data=output_gradients)
+        h5_file.create_dataset("lambdas", data=lambdas)
     with h5py.File(filename, "w") as h5_file:
         h5_file.create_dataset("gradients", data=output_gradients)
         h5_file.create_dataset("lambdas", data=lambdas)
