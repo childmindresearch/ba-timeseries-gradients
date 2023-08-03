@@ -1,9 +1,11 @@
 """ CLI Integration tests. """
 # pylint: disable=redefined-outer-name
+from __future__ import annotations
+
 import dataclasses
 import pathlib
 import tempfile
-from typing import Generator
+from typing import Any, Generator
 
 import h5py
 import nibabel as nib
@@ -33,7 +35,7 @@ class MockParser:
     extension: str = ".nii.gz"
     dimensionality_reduction: str = "dm"
     parcellation: str | None = None
-    output_format = "h5"
+    output_format: str = "h5"
     kernel: str = "cosine"
     sparsity: float = 0.1
     n_components: int = 10
@@ -41,8 +43,8 @@ class MockParser:
     verbose: int = 0
     dry_run: bool = False
 
-    def parse_args(self, *args):
-        """Return self."""
+    def parse_args(self, *args: Any) -> MockParser:
+        """Return self. Required for mocking the parser.parse_args() method."""
         return self
 
 
@@ -117,8 +119,8 @@ def test_volume_input(
 
         output = pathlib.Path(output_dir) / "gradients.h5"
 
-        output_gradients = np.array(h5py.File(output, "r")["gradients"])  # type: ignore[assignment]
-        output_lambdas = np.array(h5py.File(output, "r")["lambdas"])  # type: ignore[assignment]
+        output_gradients = np.array(h5py.File(output, "r")["gradients"])
+        output_lambdas = np.array(h5py.File(output, "r")["lambdas"])
 
     assert output_gradients.shape == (3, 2)  # three parcels, two components
     assert output_lambdas.shape == (2,)  # two components
@@ -146,8 +148,8 @@ def test_surface_input(
         cli.main()
         output = pathlib.Path(output_dir) / "gradients.h5"
 
-        output_gradients = np.array(h5py.File(output, "r")["gradients"])  # type: ignore[assignment]
-        output_lambdas = np.array(h5py.File(output, "r")["lambdas"])  # type: ignore[assignment]
+        output_gradients = np.array(h5py.File(output, "r")["gradients"])
+        output_lambdas = np.array(h5py.File(output, "r")["lambdas"])
 
     assert output_gradients.shape == (3, 2)  # three parcels, two components
     assert output_lambdas.shape == (2,)  # two components

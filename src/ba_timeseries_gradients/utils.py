@@ -21,7 +21,6 @@ def save(
 
     """
     filename = pathlib.Path(filename)
-
     if filename.suffix == ".h5":
         save_hdf5(output_gradients, lambdas, filename)
     elif filename.suffix == ".json":
@@ -34,7 +33,7 @@ def save_hdf5(
     output_gradients: np.ndarray, lambdas: np.ndarray, filename: str | pathlib.Path
 ) -> None:
     """
-    Saves a numpy array to a file with the given filename.
+    Saves a numpy array to a HDF5 file with the given filename.
 
     Args:
         output_gradients: The numpy array to save.
@@ -50,7 +49,7 @@ def save_json(
     output_gradients: np.ndarray, lambdas: np.ndarray, filename: str | pathlib.Path
 ) -> None:
     """
-    Saves a numpy array to a file with the given filename.
+    Saves a numpy array to a JSON file with the given filename.
 
     Args:
         output_gradients: The numpy array to save.
