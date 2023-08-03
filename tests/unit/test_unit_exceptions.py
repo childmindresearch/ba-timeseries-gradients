@@ -10,15 +10,12 @@ from ba_timeseries_gradients import exceptions
     [
         exceptions.BaseLoggingError,
         exceptions.InputError,
-        exceptions.BrainSpaceError,
         exceptions.InternalError,
     ],
 )
 def test_logging_error(
     mocker: pytest_mock.MockFixture,
-    exception_type: exceptions.BaseLoggingError
-    | exceptions.InputError
-    | exceptions.BrainSpaceError,
+    exception_type: exceptions.BaseLoggingError | exceptions.InputError,
 ):
     """
     Test that a BaseLoggingError is raised with the correct message and that the error is logged.

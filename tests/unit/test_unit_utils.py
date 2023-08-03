@@ -68,4 +68,4 @@ def test_save_internal_error() -> None:
     parser = MockArgparse(pathlib.Path("."), "txt")
 
     with pytest.raises(exceptions.InternalError):
-        utils.save(np.array([1, 2, 3]), np.array([2, 3, 4]), parser)  # type: ignore[arg-type]
+        utils.save(np.array([1, 2, 3]), np.array([2, 3, 4]), "wrong.extension")  # type: ignore[arg-type]

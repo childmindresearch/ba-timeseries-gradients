@@ -20,22 +20,6 @@ def test_compute_gradients(mocker: pytest_mock.MockFixture) -> None:
     assert np.allclose(actual_lambdas, 0)
 
 
-def test_compute_gradients_brainspace_error(mocker: pytest_mock.MockFixture) -> None:
-    """Test that the compute_gradients function raises an error when
-    BrainSpace raises an error."""
-    mocker.patch(
-        "ba_timeseries_gradients.gradients._get_connectivity_matrix",
-        return_value=np.ones((3, 3)),
-    )
-    mocker.patch(
-        "brainspace.gradient.GradientMaps",
-        side_effect=Exception("Error"),
-    )
-
-    with pytest.raises(exceptions.BrainSpaceError):
-        gradients.compute_gradients(files=[])
-
-
 def test_connevtivity_matrix_from_2d_success(mocker: pytest_mock.MockerFixture) -> None:
     """Test that the connectivity matrix is computed correctly from a 2D
     timeseries."""

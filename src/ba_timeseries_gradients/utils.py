@@ -1,5 +1,4 @@
 """ Utility functions for the BrainSpace runner. """
-import argparse
 import json
 import pathlib
 
@@ -10,18 +9,18 @@ from ba_timeseries_gradients import exceptions
 
 
 def save(
-    output_gradients: np.ndarray, lambdas: np.ndarray, args: argparse.Namespace
+    output_gradients: np.ndarray, lambdas: np.ndarray, filename: str | pathlib.Path
 ) -> None:
     """
     Saves a numpy array to a file with the given filename.
 
     Args:
         output_gradients: The numpy array to save.
+        lambdas: The lambdas to save.
         filename: The filename to save the array to.
 
     """
-    extension = "h5" if args.output_format == "hdf5" else args.output_format
-    filename = args.output_dir / f"gradients.{extension}"
+    filename = pathlib.Path(filename)
 
     if filename.suffix == ".h5":
         save_hdf5(output_gradients, lambdas, filename)
@@ -42,9 +41,9 @@ def save_hdf5(
         filename: The filename to save the array to.
 
     """
-    with h5py.File(filename, "w") as fb:
-        fb.create_dataset("gradients", data=output_gradients)
-        fb.create_dataset("lambdas", data=lambdas)
+    with h5py.File(filename, "w") as h5_file:
+        h5_file.create_dataset("gradients", data=output_gradients)
+        h5_file.create_dataset("lambdas", data=lambdas)
 
 
 def save_json(
@@ -58,11 +57,11 @@ def save_json(
         filename: The filename to save the array to.
 
     """
-    with open(filename, "w", encoding="utf-8") as fb:
+    with open(filename, "w", encoding="utf-8") as file_buffer:
         json.dump(
             {
                 "gradients": output_gradients.tolist(),
                 "lambdas": lambdas.tolist(),
             },
-            fb,
+            file_buffer,
         )

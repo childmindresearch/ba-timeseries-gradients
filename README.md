@@ -18,11 +18,21 @@ poetry install
 
 ## Usage
 
-The basic usage of the ba_timeseries_gradients CLI is as follows for Poetry-based installations.
+The basic usage of the ba_timeseries_gradients CLI is as follows for Poetry-based installations:
 
 ```bash
 ba_timeseries_gradients [OPTIONS] BIDS_DIR OUTPUT_DIR ANALYSIS_LEVEL
 ```
+
+The `BIDS_DIR` is the path to the BIDS directory containing the dataset to be analyzed. The `OUTPUT_DIR` is the path to the directory where the output will be saved. The `ANALYSIS_LEVEL` is the level of analysis to be performed, which can currently only be `group`.
+
+For a full list of options, see:
+
+```bash
+ba_timeseries_gradients --help
+```
+
+It is highly recommended to include options to filter the dataset for specific files. See the BIDS arguments section in the help for more details.
 
 You can also run the CLI through Docker. To do so, run the following command:
 
@@ -43,7 +53,3 @@ singularity run \
     docker://ghcr.io/cmi-dair/ba-timeseries-gradients:main \
     [OPTIONS] BIDS_DIR OUTPUT_DIR ANALYSIS_LEVEL
 ```
-
-The `BIDS_DIR` is the path to the BIDS directory containing the dataset to be analyzed. The `OUTPUT_DIR` is the path to the directory where the output will be saved. The `ANALYSIS_LEVEL` is the level of analysis to be performed, which can currently only be `group`.
-
-For a complete list of options see `ba_timeseries_gradients -h`. It is highly recommended to include options to filter the dataset for specific files. See the BIDS arguments section in the help for more details.
