@@ -8,7 +8,7 @@ readme = "README.md"
 packages = [{include = "ba_timeseries_gradients", from = "src"}]
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = ">=3.11, <3.12"
 brainspace = "^0.1.10"
 numpy = "^1.25.0"
 h5py = "^3.9.0"

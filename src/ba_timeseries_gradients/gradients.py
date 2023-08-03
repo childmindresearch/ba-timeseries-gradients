@@ -141,7 +141,9 @@ def _get_nifti_gifti_data(image: filebasedimages.FileBasedImage) -> np.ndarray:
         The image data as a numpy array.
     """
     if isinstance(image, nib.Nifti1Image):
+        logger.debug("Loading NIfTI data...")
         return image.get_fdata()
     if isinstance(image, nib.GiftiImage):
+        logger.debug("Loading GIFTI data...")
         return image.darrays[0].data
     raise exceptions.InputError("Input image must be a NIfTI or GIFTI image.")

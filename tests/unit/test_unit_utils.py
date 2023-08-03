@@ -64,8 +64,7 @@ def test_save_json() -> None:
 
 
 def test_save_internal_error() -> None:
-    """Test that the save_json function raises an error if the file extension is not .json or .h5."""
-    parser = MockArgparse(pathlib.Path("."), "txt")
-
+    """Test that the save_json function raises an error if the file extension is
+    not known."""
     with pytest.raises(exceptions.InternalError):
-        utils.save(np.array([1, 2, 3]), np.array([2, 3, 4]), "wrong.extension")  # type: ignore[arg-type]
+        utils.save(np.array([1, 2, 3]), np.array([2, 3, 4]), "wrong.extension")

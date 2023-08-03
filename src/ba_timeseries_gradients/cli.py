@@ -13,7 +13,7 @@ LOGGER_NAME = logs.LOGGER_NAME
 logger = logging.getLogger(LOGGER_NAME)
 
 
-def main():
+def main() -> None:
     """
     The main function that runs the ba_timeseries_gradients command line interface.
     """
@@ -268,7 +268,7 @@ def _get_bids_files(args: argparse.Namespace) -> list[str]:
     }
 
     layout = bids.BIDSLayout(args.bids_dir, validate=False)
-    files = layout.get(return_type="filename", **search_args)
+    files: list[str] = layout.get(return_type="filename", **search_args)
 
     logger.info("Found %d input files.", len(files))
     logger.debug("Input files: %s", files)
