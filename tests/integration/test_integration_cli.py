@@ -40,7 +40,7 @@ class MockParser:
     sparsity: float = 0.1
     n_components: int = 10
     force: bool = False
-    verbose: int = 0
+    verbose: str = "info"
     dry_run: bool = False
 
     def parse_args(self, *args: Any) -> MockParser:
@@ -107,7 +107,7 @@ def test_volume_input(
         mock_parser.output_dir = pathlib.Path(output_dir)
         mock_parser.parcellation = nifti_parcellation_file
         mocker.patch(
-            "ba_timeseries_gradients.cli._get_parser",
+            "ba_timeseries_gradients.parser.get_parser",
             return_value=mock_parser,
         )
         mocker.patch(
@@ -137,7 +137,7 @@ def test_surface_input(
         mock_parser.output_dir = pathlib.Path(output_dir)
         mock_parser.parcellation = surface_parcellation_file
         mocker.patch(
-            "ba_timeseries_gradients.cli._get_parser",
+            "ba_timeseries_gradients.parser.get_parser",
             return_value=mock_parser,
         )
         mocker.patch(
