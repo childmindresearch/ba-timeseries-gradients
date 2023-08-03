@@ -51,19 +51,14 @@ def compute_gradients(
     connectivity_matrix = _get_connectivity_matrix(files, parcellation_file)
 
     logger.info("Computing gradients...")
-    try:
-        gradient_map = gradient.GradientMaps(
-            n_components=n_components,
-            kernel=kernel,
-            approach=approach,
-            alignment=None,
-            random_state=0,
-        )
-        gradient_map.fit(connectivity_matrix, sparsity=sparsity)
-    except Exception as exc_info:
-        raise exceptions.BrainSpaceError(
-            f"An error occurred in BrainSpace: {exc_info}"
-        ) from exc_info
+    gradient_map = gradient.GradientMaps(
+        n_components=n_components,
+        kernel=kernel,
+        approach=approach,
+        alignment=None,
+        random_state=0,
+    )
+    gradient_map.fit(connectivity_matrix, sparsity=sparsity)
 
     return gradient_map.gradients_, gradient_map.lambdas_
 
@@ -92,6 +87,7 @@ def _get_connectivity_matrix(
     for index, filename in enumerate(files):
         logger.debug("Processing file %s of %s...", index + 1, len(files))
         timeseries = _get_nifti_gifti_data(nib.load(filename)).squeeze()
+
         timeseries_permuted = np.swapaxes(timeseries, 0, -1)
         timeseries_2d = timeseries_permuted.reshape(timeseries_permuted.shape[0], -1)
 

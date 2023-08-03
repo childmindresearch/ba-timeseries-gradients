@@ -25,6 +25,12 @@ def main():
 
     logger.debug("Getting input files...")
     files = _get_bids_files(args)
+    output_file = args.output_dir / ("gradients." + args.output_format)
+
+    if args.dry_run:
+        logger.info("Detected input files:\n%s", "\n".join(files))
+        logger.info("Output file: %s", output_file)
+        return
 
     logger.debug("Checking input validity.")
     _raise_invalid_input(args, files)
@@ -39,8 +45,8 @@ def main():
         sparsity=args.sparsity,
     )
 
-    logger.info("Saving gradient map to %s...", args.output_dir)
-    utils.save(output_gradients, lambdas, args)
+    logger.info("Saving gradient map to %s.", output_file)
+    utils.save(output_gradients, lambdas, output_file)
 
 
 def _get_parser() -> argparse.ArgumentParser:
@@ -202,10 +208,16 @@ def _get_parser() -> argparse.ArgumentParser:
     other_group.add_argument(
         "--output_format",
         required=False,
-        default="hdf5",
+        default="h5",
         type=str,
         help="Output file format",
-        choices=["hdf5", "json"],
+        choices=["h5", "json"],
+    )
+    other_group.add_argument(
+        "--dry-run",
+        required=False,
+        action="store_true",
+        help="Do not run the pipeline, only show what input files would be used. Note that dry run is logged at the logging.INFO level.",
     )
 
     return parser
@@ -237,9 +249,6 @@ def _raise_invalid_input(args: argparse.Namespace, files: list[str]) -> None:
         raise exceptions.InputError(
             "Must provide a parcellation if input files are volume files."
         )
-
-    if args.output_format not in ("hdf5", "json"):
-        raise exceptions.InputError("Output format must be one of: 'hdf5', or 'json'.")
 
 
 def _get_bids_files(args: argparse.Namespace) -> list[str]:

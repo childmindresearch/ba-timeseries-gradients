@@ -13,8 +13,8 @@ class BaseLoggingError(Exception):
 
     def __init__(self, message: str):
         self.message = message
-        super().__init__(self.message)
         logger.error(self.message)
+        super().__init__(self.message)
 
 
 class InputError(BaseLoggingError):
@@ -23,7 +23,3 @@ class InputError(BaseLoggingError):
 
 class InternalError(BaseLoggingError):
     """Exception raised when an internal error occurs. These should never happen."""
-
-
-class BrainSpaceError(BaseLoggingError):
-    """Exception raised when a BrainSpace error occurs."""

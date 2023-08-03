@@ -33,12 +33,13 @@ class MockParser:
     extension: str = ".nii.gz"
     dimensionality_reduction: str = "dm"
     parcellation: str | None = None
-    output_format = "hdf5"
+    output_format = "h5"
     kernel: str = "cosine"
     sparsity: float = 0.1
     n_components: int = 10
     force: bool = False
     verbose: int = 0
+    dry_run: bool = False
 
     def parse_args(self, *args):
         """Return self."""
