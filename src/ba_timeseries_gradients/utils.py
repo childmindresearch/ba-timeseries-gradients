@@ -46,6 +46,9 @@ def save_hdf5(
     with h5py.File(filename, "w") as h5_file:
         h5_file.create_dataset("gradients", data=output_gradients)
         h5_file.create_dataset("lambdas", data=lambdas)
+    with h5py.File(filename, "w") as h5_file:
+        h5_file.create_dataset("gradients", data=output_gradients)
+        h5_file.create_dataset("lambdas", data=lambdas)
 
 
 def save_json(
