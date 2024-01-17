@@ -19,7 +19,7 @@ def get_parser() -> argparse.ArgumentParser:
         description="""Computes gradients for a BIDS dataset. If the target
         files are volumetric, they must be in NIFTI format, and a parcellation
         file must be provided.""",
-        epilog="""Issues can be reported at: https://github.com/cmi-dair/ba_timeseries_gradients.""",
+        epilog="""Issues can be reported at: https://github.com/childmindresearch/ba_timeseries_gradients.""",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
 

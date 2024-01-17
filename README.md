@@ -1,7 +1,7 @@
 # ba-timeseries-gradients
 
-[![Build](https://github.com/cmi-dair/ba-timeseries-gradients/actions/workflows/test.yaml/badge.svg?branch=main)](https://github.com/cmi-dair/ba-timeseries-gradients/actions/workflows/test.yaml?query=branch%3Amain)
-[![codecov](https://codecov.io/gh/cmi-dair/ba-timeseries-gradients/branch/main/graph/badge.svg?token=22HWWFWPW5)](https://codecov.io/gh/cmi-dair/ba-timeseries-gradients)
+[![Build](https://github.com/childmindresearch/ba-timeseries-gradients/actions/workflows/test.yaml/badge.svg?branch=main)](https://github.com/childmindresearch/ba-timeseries-gradients/actions/workflows/test.yaml?query=branch%3Amain)
+[![codecov](https://codecov.io/gh/childmindresearch/ba-timeseries-gradients/branch/main/graph/badge.svg?token=22HWWFWPW5)](https://codecov.io/gh/childmindresearch/ba-timeseries-gradients)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![L-GPL License](https://img.shields.io/badge/license-L--GPL-blue.svg)](LICENSE)
 
@@ -40,7 +40,7 @@ You can also run the CLI through Docker. To do so, run the following command:
 docker run \
     --volume LOCAL_BIDS_DIR:BIDS_DIR \
     --volume LOCAL_OUTPUT_DIR:OUTPUT_DIR \
-    ghcr.io/cmi-dair/ba-timeseries-gradients:main \
+    ghcr.io/childmindresearch/ba-timeseries-gradients:main \
     [OPTIONS] BIDS_DIR OUTPUT_DIR ANALYSIS_LEVEL
 ```
 
@@ -50,6 +50,6 @@ Similarly, the CLI can also be run in Singularity as follows:
 singularity run \
     --bind LOCAL_BIDS_DIR:BIDS_DIR \
     --bind LOCAL_OUTPUT_DIR:OUTPUT_DIR \
-    docker://ghcr.io/cmi-dair/ba-timeseries-gradients:main \
+    docker://ghcr.io/childmindresearch/ba-timeseries-gradients:main \
     [OPTIONS] BIDS_DIR OUTPUT_DIR ANALYSIS_LEVEL
 ```
